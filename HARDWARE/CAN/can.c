@@ -56,7 +56,7 @@ typedef struct _tagCAN_RX_FRAME_MAP
 
 CAN_RX_FRAME_MAP rxd;    //接受数据
 
-u8 CAN_Mode_Init(u8 tsjw,u8 tbs2,u8 tbs1,u16 brp,u8 mode)
+u8 CAN_Mode_Init(u8 tsjw,u8 tbs2,u8 tbs1,u16 brp,u8 mode)   
 {
     GPIO_InitTypeDef GPIO_InitStructure;
     CAN_InitTypeDef        CAN_InitStructure;
@@ -87,7 +87,7 @@ u8 CAN_Mode_Init(u8 tsjw,u8 tbs2,u8 tbs1,u16 brp,u8 mode)
     CAN_InitStructure.CAN_BS1=tbs1;       //Tbs1=tbs1+1?????CAN_BS1_1tq ~CAN_BS1_16tq
     CAN_InitStructure.CAN_BS2=tbs2;       //Tbs2=tbs2+1?????CAN_BS2_1tq ~	CAN_BS2_8tq
     CAN_InitStructure.CAN_Prescaler=brp;            //????(Fdiv)?brp+1	//
-    CAN_Init(CAN1, &CAN_InitStructure);            // ???CAN1
+    CAN_Init(CAN1, &CAN_InitStructure);              // ???CAN1
 
     CAN_FilterInitStructure.CAN_FilterNumber=0;	   //???0   //   ??14????
     CAN_FilterInitStructure.CAN_FilterMode=CAN_FilterMode_IdMask; //????????
@@ -128,11 +128,12 @@ u8 Can_Send_Msg(u8 len)
    u8 mbox;  
 	 CAN_TX_MESSAGE_MAP *txd;
    txd=malloc(sizeof(CAN_TX_MESSAGE_MAP));
-   txd->uExtId.sDet.nSrcId=0x01;
-	 txd->uExtId.sDet.nDestId=0x1f;
-	 txd->uExtId.sDet.nCmd=0x00;
-	 txd->uExtId.sDet.nAfn=0x31;
-	 txd->uExtId.sDet.nFn=0x00;
+   txd->uExtId.sDet.nSrcId= 0x19  ;
+	 txd->uExtId.sDet.nDestId= 0x1e ;
+	 txd->uExtId.sDet.nCmd=0x07;
+	 txd->uExtId.sDet.nAfn=0x12;
+	 txd->uExtId.sDet.nFn=0x16;
+	
 	 txd->DLC=len;
 	 txd->RTR=CAN_RTR_DATA;
 	 txd->IDE=CAN_ID_EXT;
@@ -140,11 +141,16 @@ u8 Can_Send_Msg(u8 len)
 	 temp_h=SIMU_ARRY[arrycount];
    temp_l=SIMU_ARRY[arrycount]>>8;
 	
-   txd->Data[0]=temp_h;       //数据高字节
-   txd->Data[1]=temp_l;       //数据低字节
-   txd->Data[2]=31;              //rpm
-	 txd->Data[3]=selfcount;    //累加 ----0至255 	 
-	 	 
+   	  
+   txd->Data[0]=0x00;       //数据高字节
+   txd->Data[1]=0x00;       //数据低字节
+   txd->Data[2]=0x00;              //rpm
+	 txd->Data[3]=temp_h;       //数据高字节
+   txd->Data[4]=temp_l;       //数据低字节
+   txd->Data[5]=31;              //rpm
+	 txd->Data[6]=selfcount;    //累加 ----0至255 	 
+	  txd->Data[7]=0xff;   
+	
 	if(!fbits.SUBFLAG.SUBFLAG_1.NEW_MOMENT_FLAG)        //一直发送0x02ee （750mv）
 	{
 		 	arrycount=0;   //750mv

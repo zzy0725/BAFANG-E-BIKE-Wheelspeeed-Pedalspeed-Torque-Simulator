@@ -60,7 +60,7 @@ void TIM2_IRQHandler(void)    //新法规力矩
 				 if(Timer2_Counter==5)    //按下后，30ms 发一次力矩数据
 				 {		
 						Timer2_Counter=0;
-						Can_Send_Msg(4);	  //发送can 750-3200mv 数据
+						Can_Send_Msg(8);	  //发送can 750-3200mv 数据
 				 }
 				 if(FAN_ZHUAN_FLAG)       //正转
 				 {
