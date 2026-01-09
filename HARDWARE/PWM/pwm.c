@@ -206,20 +206,20 @@ void TIM3_IRQHandler(void)     //老法规力矩
 			    	Tim3count++; 
 				  	if(FAN_ZHUAN_FLAG)
 						{
-										 if(Tim3count==2000)      
+										 if(Tim3count==8000)      
 										 {
 												 GPIO_SetBits(OLD_MOMENT_PORT,OLD_MOMENT_PIN);
 										 }
-										else if(Tim3count==4000)
+										else if(Tim3count==16000)
 										{
 													GPIO_SetBits(SPEED_L_PORT,SPEED_L_PIN);			
 										}   
-										else if(Tim3count==6000)
+										else if(Tim3count==24000)
 										{ 
 													GPIO_ResetBits(OLD_MOMENT_PORT,OLD_MOMENT_PIN);
 											
 										}   
-										else if(Tim3count==8000)
+										else if(Tim3count==32000)
 										{
 													Tim3count=0;
 													GPIO_ResetBits(SPEED_L_PORT,SPEED_L_PIN);
@@ -227,19 +227,19 @@ void TIM3_IRQHandler(void)     //老法规力矩
 						}
 						if(!FAN_ZHUAN_FLAG)
 						{
-										 if(Tim3count==2000)      
+										 if(Tim3count==8000)      
 										 {		
 													GPIO_SetBits(SPEED_L_PORT,SPEED_L_PIN);			
 										 }
-										else if(Tim3count==4000)
+										else if(Tim3count==16000)
 										{
 													GPIO_SetBits(OLD_MOMENT_PORT,OLD_MOMENT_PIN);
 										}   
-										else if(Tim3count==6000)
+										else if(Tim3count==24000)
 										{
 													GPIO_ResetBits(SPEED_L_PORT,SPEED_L_PIN);
 										}   
-										else if(Tim3count==8000)
+										else if(Tim3count==32000)
 										{
 													Tim3count=0; 		
 													GPIO_ResetBits(OLD_MOMENT_PORT,OLD_MOMENT_PIN);
@@ -257,9 +257,12 @@ void TIM4_IRQHandler(void)  //正反转切换
 			Tim4count++;
 		  if(Tim4count==200)Tim4count=0;
 		  TIM_ClearITPendingBit(TIM4, TIM_IT_Update);		
-			 Key_return=ReadKeyValue();    //按键检测
-		   	if(Key_return & KEY_UP)	
-				{
+			 Key_return=ReadKeyValue();         //按键检测
+		   	if(Key_return & KEY_UP)						//here can adjust period of Dual-Hall signal.
+				/*
+				5-150ms;6-175ms;9-250ms;11-300ms;12-325ms;30-775ms;79-2000ms;   times=26
+				*/
+				{ 
 								if(Key_return & PRESS_KEY1)
 								{
 															key_PRM_Count--;
@@ -269,85 +272,154 @@ void TIM4_IRQHandler(void)  //正反转切换
 														 }	 
 														 if(key_PRM_Count==2)
 														 {	
-																TIM7->ARR=79;
-														  	 TIM6->ARR=79;
+															  TIM7->ARR=120;
+														  	TIM6->ARR=120;
 														 }
 														 if(key_PRM_Count==3)
 														 {
-																TIM7->ARR=30;
-																TIM6->ARR=30;
+																TIM7->ARR=100;
+																TIM6->ARR=100;
 														 }
-															if(key_PRM_Count==4)
+														 if(key_PRM_Count==4)
 														 {
 											
-																		TIM7->ARR=12;
-														      	TIM6->ARR=12;
+																TIM7->ARR=80;
+														    TIM6->ARR=80;
 														 }
 														 if(key_PRM_Count==5)
 														 {	
-																TIM7->ARR=11;
-											      	 	TIM6->ARR=11;
+																TIM7->ARR=60;
+											      	 	TIM6->ARR=60;
 														 }
 														 if(key_PRM_Count==6)
 														 {
-																TIM7->ARR=9;
-						  					   			 TIM6->ARR=9;
+																TIM7->ARR=41;
+						  					   			TIM6->ARR=41;
 														 }
 														 if(key_PRM_Count==7)
 														 {
-																TIM7->ARR=6;
-											  		 		TIM6->ARR=6;
+																TIM7->ARR=36;
+											  		 		TIM6->ARR=36;
 														 }
 														 if(key_PRM_Count==8)
 														 {
-																TIM7->ARR=5;
-								       			 		TIM6->ARR=5;
-														 }    		
+																TIM7->ARR=33;
+								       			 		TIM6->ARR=33;
+														 }
+														 if(key_PRM_Count==9)
+														 {
+																TIM7->ARR=28;
+								       			 		TIM6->ARR=28;
+														 }
+														 if(key_PRM_Count==10)
+														 {
+																TIM7->ARR=24;
+								       			 		TIM6->ARR=24;
+														 }
+														 if(key_PRM_Count==11)
+														 {
+																TIM7->ARR=19;
+								       			 		TIM6->ARR=19;
+														 }
+														 if(key_PRM_Count==12)
+														 {
+																TIM7->ARR=15;
+								       			 		TIM6->ARR=15;
+														 }	
+														 if(key_PRM_Count==13)
+														 {
+																TIM7->ARR=11;
+								       			 		TIM6->ARR=11;
+														 }
+														 if(key_PRM_Count==14)
+														 {
+																TIM7->ARR=7;
+								       			 		TIM6->ARR=7;
+														 }
+														 if(key_PRM_Count==15)
+														 {
+																TIM7->ARR=4;
+								       			 		TIM6->ARR=4;
+														 }														 
 								}
 								if(Key_return & PRESS_KEY2)
 								{
 														 key_PRM_Count++;		 
-															if(key_PRM_Count==9)
-															{
-																	key_PRM_Count=8;
-															 }	 
-															 if(key_PRM_Count==2)
+														 if(key_PRM_Count==2)
 															 {
-																	 TIM7->ARR=79;
-																 
-											  				 	 TIM6->ARR=79;
+															  TIM7->ARR=120;																 
+											  				TIM6->ARR=120;
 															 }
 														 if(key_PRM_Count==3)
 														 {
-													  			 TIM7->ARR=30;
-									        			   TIM6->ARR=30;
+													    	TIM7->ARR=100;
+									        			TIM6->ARR=100;
 														 }
-															if(key_PRM_Count==4)
+														 if(key_PRM_Count==4)
 														 {
 												  
-															 	TIM7->ARR=12;
-											      	 	TIM6->ARR=12;					 
+															 	TIM7->ARR=80;
+											      	 	TIM6->ARR=80;					 
 														 }
 														 if(key_PRM_Count==5)
 														 {	
-																	TIM7->ARR=11;
-											        	 TIM6->ARR=11;
+																TIM7->ARR=60;
+											        	TIM6->ARR=60;
 														 }
 														 if(key_PRM_Count==6)
 														 {
-																TIM7->ARR=9;
-											        	 TIM6->ARR=9;
+																TIM7->ARR=41;
+											        	TIM6->ARR=41;
 														 }
 														 if(key_PRM_Count==7)
 														 {
-																TIM7->ARR=6;
-									          	 	TIM6->ARR=6;
+																TIM7->ARR=36;
+									          	 	TIM6->ARR=36;
 														 }
 														 if(key_PRM_Count==8)
 														 {
-																TIM7->ARR=5;
-									     				 	TIM6->ARR=5;
-														 }																    
+																TIM7->ARR=33;
+									     				 	TIM6->ARR=33;
+														 }
+														 if(key_PRM_Count==9)
+														 {
+																TIM7->ARR=28;
+									     				 	TIM6->ARR=28;
+														 }
+														 if(key_PRM_Count==10)
+														 {
+																TIM7->ARR=24;
+									     				 	TIM6->ARR=24;
+														 }
+														 if(key_PRM_Count==11)
+														 {
+																TIM7->ARR=19;
+									     				 	TIM6->ARR=19;
+														 }
+													   if(key_PRM_Count==12)
+														 {
+																TIM7->ARR=15;
+									     				 	TIM6->ARR=15;
+														 }
+														 if(key_PRM_Count==13)
+														 {
+																TIM7->ARR=11;
+									     				 	TIM6->ARR=11;
+														 }
+														 if(key_PRM_Count==14)
+														 {
+																TIM7->ARR=7;
+									     				 	TIM6->ARR=7;
+														 }
+													   if(key_PRM_Count==15)
+														 {
+																TIM7->ARR=4;
+									     				 	TIM6->ARR=4;
+														 }
+														 if(key_PRM_Count==16)
+														 {
+																	key_PRM_Count=15;
+														 }
 								}
 				}
 				 	if(Key_return & KEY_LONG)	
@@ -439,7 +511,36 @@ void TIM7_IRQHandler(void)    //新法规测速
 	{
 		 TIM_ClearITPendingBit(TIM7, TIM_IT_Update);  
 		 Tim7count++;
-    if(Tim7count==5)                              //speed1 speed2 信号一致
+    if(Tim7count==5)                              //speed1 speed2 信号phase=90deg-------add by Ziyu Zhang 24/01/15
+		{
+				GPIO_ResetBits(NEWSPEED1_PORT,NEWSPEED1_PIN); 	   //speed1信号
+				GPIO_SetBits(NEWSPEED2_PORT,NEWSPEED2_PIN);	   //speed2信号
+		}	
+		else if(Tim7count==10) 
+		{
+				GPIO_ResetBits(NEWSPEED1_PORT,NEWSPEED1_PIN); 	   //speed1信号
+				GPIO_ResetBits(NEWSPEED2_PORT,NEWSPEED2_PIN);	   //speed2信号
+		}	
+		else if(Tim7count==15) 
+		{
+				GPIO_SetBits(NEWSPEED1_PORT,NEWSPEED1_PIN); 	   //speed1信号
+				GPIO_ResetBits(NEWSPEED2_PORT,NEWSPEED2_PIN);	   //speed2信号
+		}	
+		else if(Tim7count==20) 
+		{
+				GPIO_SetBits(NEWSPEED1_PORT,NEWSPEED1_PIN); 	   //speed1信号
+				GPIO_SetBits(NEWSPEED2_PORT,NEWSPEED2_PIN);	   //speed2信号
+		}	
+		else if(Tim7count==250)                       //周期间隔250ms
+		{
+			  Tim7count=0;
+		}
+	}
+	/*original code------SPD1 and SPD2 is in same phase
+		{
+		 TIM_ClearITPendingBit(TIM7, TIM_IT_Update);  
+		 Tim7count++;
+    if(Tim7count==125)                              //speed1 speed2 信号一致
 		{
 				GPIO_SetBits(NEWSPEED1_PORT,NEWSPEED1_PIN); 	   //speed1信号
 				GPIO_SetBits(NEWSPEED2_PORT,NEWSPEED2_PIN);	   //speed2信号
@@ -451,5 +552,6 @@ void TIM7_IRQHandler(void)    //新法规测速
 				GPIO_ResetBits(NEWSPEED2_PORT,NEWSPEED2_PIN);	 //speed2信号
 		}
 	}
+		*/
 }
 
