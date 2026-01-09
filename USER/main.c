@@ -68,7 +68,8 @@ int main(void)
 		TIM6_Init(30,7199);         
     TIM7_Init(TIM7_INIT_COUNT,7199);   //新法规测速    1.5hz
    	mos_out_gpio_init();      //mos输出引脚初始化
-	 	CAN_Mode_Init(CAN_SJW_1tq,CAN_BS2_8tq,CAN_BS1_3tq,12,CAN_Mode_Normal);	   //can外设初始化
+	// 	CAN_Mode_Init(CAN_SJW_1tq,CAN_BS2_8tq,CAN_BS1_3tq,12,CAN_Mode_Normal);	   //can外设初始化
+	CAN_Mode_Init(CAN_SJW_1tq,CAN_BS2_8tq,CAN_BS1_3tq,6,CAN_Mode_Normal);	   //can外设初始化  500K
 	  IWDG_Init(4,625);    //与分频数为64,重载值为625,溢出时间为1s	   	
 	
 		while(1)
