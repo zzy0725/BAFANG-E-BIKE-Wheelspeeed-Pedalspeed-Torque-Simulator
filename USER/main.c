@@ -30,10 +30,9 @@ unsigned char old_moment_count;    //老法规数组计数
 //新法规模拟数组
 unsigned int SIMU_ARRY[62]={0x02ee,0x0387,0x0420,0x04b9,0x0552,0x05eb,0x0684,0x07b6,0x084f,0x08eb,0x0981,0x0a1a,0x0ab3,0x0b4c,0x0be5,0x0c80,0x0be5,0x0b4c,0x0ab3,0x0a1a,0x0981,0x08eb,0x084f,0x07b6,0x0684,0x05eb,0x0553,0x0489,0x0420,0x0387,0x02ee,0x0387,0x0420,0x04b9,0x0552,0x05eb,0x0684,0x07b6,0x084f,0x08eb,0x0981,0x0a1a,0x0ab3,0x0b4c,0x0be5,0x0c80,0x0be5,0x0b4c,0x0ab3,0x0a1a,0x0981,0x08eb,0x084f,0x07b6,0x0684,0x05eb,0x0553,0x0489,0x0420,0x0387,0x02ee};
 //老法规模拟数组
-//u16  old_EH[30]={75,105,120,136,151,166,197,212,228,243,258,273,289,304,320,304,289,273,258,243,228,212,197,166,151,136,120,105,90,75};	
-u16  old_EH[53]={75,85,95,105,115,125,135,145,155,165,175,185,195,205,215,225,235,245,255,265,275,285,295,305,315,325,330,325,315,305,295,285,275,265,255,245,235,225,215,205,195,185,175,165,155,145,135,125,115,105,95,85,75};
+u16  old_EH[30]={75,105,120,136,151,166,197,212,228,243,258,273,289,304,320,304,289,273,258,243,228,212,197,166,151,136,120,105,90,75};	
 unsigned char rev_long=0;
-unsigned int TIM7_INIT_COUNT=79;   //初始值 3km/h  79
+unsigned int TIM7_INIT_COUNT=79;   //初始值 3km/h
 unsigned char first_flag;
 //设置输出电压
 //vol:0~330,代表0~3.3V
@@ -67,7 +66,7 @@ int main(void)
 		TIM4_Init(100,7199);        //10ms进入中断
 		TIM5_Init(10,7199);          //1ms进入中断
 		TIM6_Init(30,7199);         
-    TIM7_Init(TIM7_INIT_COUNT,7199);   //新法规测速    1.5hz 7199
+    TIM7_Init(TIM7_INIT_COUNT,7199);   //新法规测速    1.5hz
    	mos_out_gpio_init();      //mos输出引脚初始化
 	 	CAN_Mode_Init(CAN_SJW_1tq,CAN_BS2_8tq,CAN_BS1_3tq,12,CAN_Mode_Normal);	   //can外设初始化
 	  IWDG_Init(4,625);    //与分频数为64,重载值为625,溢出时间为1s	   	
@@ -84,9 +83,8 @@ int main(void)
 				}
 				if(fbits.SUBFLAG.SUBFLAG_1.OLD_MOMENT_FLAG)     //老法规发送模拟力矩信号
 				{
-						old_moment_count+=3;             //This parameter can adjust the variation speed of DAC, default in 1------add by Ziyu Zhang 24/01/15
-						//delay_ms(1);               //This also can adjust, but only for slow
-						if(old_moment_count>=53)  old_moment_count=0;
+						old_moment_count++;
+						if(old_moment_count==30)  old_moment_count=0;
 						PWM_DAC1_Set(old_EH[old_moment_count]);           //DAC模拟数组	
 				}				
 				else
